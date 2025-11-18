@@ -1,0 +1,133 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(135deg, #3a1b3f, #5e2363);
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login {
+  background-color: #6f2675;
+  padding: 40px;
+  border-radius: 25px;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
+  width: 350px;
+  max-width: 90%;
+  text-align: center;
+}
+
+.login img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 20px;
+  border: 3px solid #db9ee7;
+}
+
+.login h2 {
+  margin-bottom: 25px;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.8rem;
+  letter-spacing: 1px;
+}
+
+.login input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 18px;
+  border: 1px solid #db9ee7;
+  border-radius: 10px;
+  outline: none;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+.login input:focus {
+  border-color: #fff;
+  box-shadow: 0 0 5px #fff;
+}
+
+.login button {
+  width: 100%;
+  background-color: #3a1b3f;
+  color: white;
+  border: none;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login button:hover {
+  background-color: #1e3c72;
+}
+
+#msg {
+  margin-top: 10px;
+  color: #ffcccc;
+  font-size: 14px;
+}
+
+@media (max-width: 480px) {
+  .login {
+    width: 90%;
+    padding: 30px 20px;
+  }
+
+  .login img {
+    width: 90px;
+    height: 90px;
+  }
+
+  .login h2 {
+    font-size: 1.5rem;
+  }
+
+  .login input,
+  .login button {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 1024px) {
+  .login {
+    width: 400px;
+    padding: 45px;
+  }
+
+  .login img {
+    width: 130px;
+    height: 130px;
+  }
+
+  .login h2 {
+    font-size: 1.9rem;
+  }
+}
+
+@media (min-width: 1025px) {
+  .login {
+    width: 420px;
+    padding: 50px;
+  }
+
+  .login img {
+    width: 140px;
+    height: 140px;
+  }
+
+  .login h2 {
+    font-size: 2rem;
+  }
+}

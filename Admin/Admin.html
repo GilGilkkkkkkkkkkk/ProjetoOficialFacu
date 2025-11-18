@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Painel Administrativo</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="logo" id="logo">
+      <img src="./img/WhatsApp Image 2025-11-08 at 14.12.34.jpeg" alt="Logo">
+      <h2>UniPeças</h2>
+    </div>
+    <nav>
+      <ul>
+        <li class="active">🏠 Dashboard</li>
+        <li>📦 Produtos</li>
+        <li>📈 Vendas</li>
+        <li>👤 Usuários</li>
+        <li>⚙️ Configurações</li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Barra superior -->
+  <header class="topbar">
+    <div class="search-bar">
+      <input type="text" placeholder="Pesquisar...">
+      <button>🔍</button>
+    </div>
+    <div class="profile">
+      <div class="profile-pic"></div>
+      
+    <div class="side-menu" id="sideMenu">
+    <h2>Meu Perfil</h2>
+    <ul>
+      <li>Minha Conta</li>
+      <li>Configurações</li>
+      <li>Carrinho</li>
+      <li>C</li>
+      <li>Sair</li>
+    </ul>
+  </div>
+
+
+  </header>
+
+  <!-- Conteúdo principal -->
+  <main class="content" id="content">
+    <h1>📦 Painel Administrativo</h1>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>EAN</th>
+          <th>Produto</th>
+          <th>Preço</th>
+          <th>Estoque</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>001</td>
+          <td>99999999</td>
+          <td>Placa de Vídeo RTX 4060</td>
+          <td>R$ 2.499,90</td>
+          <td>15</td>
+          <td>
+            <button class="btn btn-edit">✏️ Editar</button>
+            <button class="btn btn-delete">🗑️ Excluir</button>
+          </td>
+        </tr>
+        <tr>
+          <td>002</td>
+          <td>99999999</td>
+          <td>Monitor Gamer 144Hz</td>
+          <td>R$ 1.299,90</td>
+          <td>8</td>
+          <td>
+            <button class="btn btn-edit">✏️ Editar</button>
+            <button class="btn btn-delete">🗑️ Excluir</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="forecast">
+      <h2>📊 Previsão de Demanda</h2>
+      <p>➡️ Produto mais vendido da semana: <b>RTX 4060</b></p>
+      <p>➡️ Previsão de vendas para próxima semana: <b>+20 unidades</b></p>
+      <button class="btn btn-demand">Gerar Relatório</button>
+    </div>
+  </main>
+<script src="script.js"></script>
+</body>
+</html>
