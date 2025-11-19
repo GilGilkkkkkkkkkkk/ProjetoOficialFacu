@@ -1,0 +1,396 @@
+/* ===== CORPO DO SITE  ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  background-color: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== BARRA SUPERIOR ===== */
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: #2f0d38;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 25px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  z-index: 10;
+}
+
+/* ===== LOGO ===== */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo img {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+}
+
+.logo h2 {
+  color: white;
+  font-size: 20px;
+  letter-spacing: 1px;
+}
+
+/* ===== BARRA DE PESQUISA ===== */
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: #f1f1f1;
+  border-radius: 25px;
+  padding: 5px 10px;
+  flex: 1;
+  max-width: 400px;
+  margin: 0 20px;
+}
+
+.search-bar input {
+  border: none;
+  outline: none;
+  background: none;
+  padding: 5px;
+  width: 100%;
+}
+
+.search-bar button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* ===== LOGIN / CADASTRO — ESTILO HARMONIZADO COM A HEADER ===== */
+.acesso a {
+  margin-left: 15px;
+  text-decoration: none;
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  color: #ffffff;
+
+  /* Cor próxima da header, porém um pouco mais clara */
+  background-color: #47204f;
+
+  border: 1px solid #643070; /* tom complementar */
+  transition: 0.25s ease;
+}
+
+/* Hover com leve luz */
+.acesso a:hover {
+  background-color: #5a2a63;
+  border-color: #7a3d87;
+}
+
+.profile .profile-pic {
+  width: 40px;
+  height: 40px;
+  background-color: #ccc;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.profile .profile-pic:hover {
+  background-color: #888;
+}
+
+/* ===== CONTEÚDO PRINCIPAL ===== */
+main{
+  flex: 1;
+}
+
+.produto-container {
+  display: flex;
+  gap: 40px;
+  max-width: 1200px;
+  margin: 120px auto 50px auto;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+/* ===== GALERIA ===== */
+.galeria {
+  flex: 1;
+  text-align: center;
+}
+
+.imagem-principal img {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 10px;
+  transition: transform 0.3s;
+}
+
+.imagem-principal img:hover {
+  transform: scale(1.05);
+}
+
+.miniaturas {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.miniaturas img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.miniaturas img:hover {
+  border: 2px solid #2f0d38;
+}
+
+/* ===== DETALHES DO PRODUTO ===== */
+.detalhes {
+  flex: 1.2;
+}
+
+.detalhes h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.marca {
+  color: #777;
+  margin-bottom: 15px;
+}
+
+.marca span {
+  color: #2f0d38;
+  font-weight: bold;
+}
+
+.preco-box {
+  margin-bottom: 15px;
+}
+
+.preco-antigo {
+  text-decoration: line-through;
+  color: #999;
+  font-size: 14px;
+}
+
+.preco-atual {
+  color: #28a745;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.parcelamento {
+  color: #444;
+  font-size: 14px;
+}
+
+.botao-comprar, .botao-add {
+  display: inline-block;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+  margin-right: 10px;
+}
+
+.botao-comprar {
+  background-color: #2f0d38;
+  color: white;
+}
+
+.botao-comprar:hover {
+  background-color: #4a1661;
+}
+
+.botao-add {
+  background-color: #f1f1f1;
+  color: #333;
+}
+
+.botao-add:hover {
+  background-color: #ddd;
+}
+
+hr {
+  margin: 25px 0;
+  border: 0;
+  border-top: 1px solid #ddd;
+}
+
+.detalhes ul {
+  list-style: disc;
+  margin-left: 20px;
+  color: #555;
+  font-size: 15px;
+}
+
+.detalhes li {
+  margin-bottom: 8px;
+}
+
+.disponibilidade {
+  margin-top: 20px;
+  color: #28a745;
+  font-weight: bold;
+}
+
+.rodape {
+  background-color: #f5f5f5; /* Mantendo o mesmo tom da página */
+  color: #555555;
+  text-align: center;
+  padding: 25px 0;
+  font-size: 14px;
+  border-top: 1px solid #ddd;
+  margin-top: auto; /* Mantém o footer no final */
+  width: 100%;
+}
+
+/* ===== RESPONSIVIDADE (desktop como base) ===== */
+
+/* Tablets: até 900px */
+@media (max-width: 900px) {
+  .produto-container {
+    flex-direction: column;
+    align-items: center;
+    margin: 100px 20px 50px 20px;
+    padding: 20px;
+  }
+
+  .galeria, .detalhes {
+    width: 100%;
+    text-align: center;
+  }
+
+  .detalhes ul {
+    text-align: left;
+  }
+
+  .imagem-principal img {
+    max-width: 350px;
+  }
+
+  .miniaturas {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .miniaturas img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .detalhes h3 {
+    font-size: 18px;
+  }
+
+  .preco-atual {
+    font-size: 26px;
+  }
+
+  .botao-comprar, .botao-add {
+    width: 100%;
+    margin: 5px 0;
+  }
+}
+
+/* Smartphones: até 600px */
+@media (max-width: 600px) {
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto;
+    padding: 10px 15px;
+    gap: 10px;
+  }
+
+  .logo img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .logo h2 {
+    font-size: 16px;
+  }
+
+  .search-bar {
+    max-width: 100%;
+    margin: 5px 0;
+  }
+
+  .acesso a {
+    padding: 6px 12px;
+    font-size: 14px;
+    margin-left: 0;
+  }
+
+  .imagem-principal img {
+    max-width: 100%;
+  }
+
+  .miniaturas img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .detalhes h3 {
+    font-size: 16px;
+  }
+
+  .preco-atual {
+    font-size: 22px;
+  }
+
+  .detalhes ul {
+    font-size: 14px;
+  }
+}
+
+/* Smartphones muito pequenos: até 400px */
+@media (max-width: 400px) {
+  .logo img {
+    width: 25px;
+    height: 25px;
+  }
+
+  .logo h2 {
+    font-size: 14px;
+  }
+
+  .botao-comprar, .botao-add {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .detalhes h3 {
+    font-size: 14px;
+  }
+
+  .topbar {
+    padding: 8px 10px;
+  }
+}
