@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cadastro de Usuário</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="cadastro.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='Cadastro.css') }}">
 </head>
 <body>
   <div class="cadastro-container">
-    <img src="./IMG/Logo/Logo.jpeg" alt="Logo do site">
+    <img src="{{ url_for('static', filename='IMG/Logo/Logo.jpeg') }}" alt="Logo">
     <h2>Faça seu Cadastro!</h2>
     <form id="formCadastro">
       <div class="form-group">
@@ -27,5 +27,8 @@
       <button type="submit">Cadastrar</button>
     </form>
   </div>
+
+  <script src="{{ url_for('static', filename='Cadastro.js') }}"></script>
+  <script type="module" src="{{ url_for('static', filename='api.js') }}"></script>
 </body>
 </html>

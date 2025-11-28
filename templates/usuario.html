@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Minha Conta - UniPeças</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='usuario.css') }}">
+</head>
+<body>
+
+<aside class="sidebar" id="sidebar">
+  <div class="logo" id="logo">
+    <img src="{{ url_for('static', filename='IMG/Logo/Logo.jpeg') }}" alt="Logo">
+    <h2>UniPeças</h2>
+  </div>
+  <nav>
+    <ul>
+      <li class="menu-item" onclick="window.location.href='/'">🏠 Início</li>
+      <li class="menu-item active" onclick="abrirConta(this)">👤 Minha Conta</li>
+      <li class="menu-item" onclick="abrirPedidos(this)">🛒 Meus Pedidos</li>
+
+    </ul>
+  </nav>
+</aside>
+
+<header class="topbar">
+  <div class="search-bar">
+    <input type="text" placeholder="Pesquisar...">
+    <button>🔍</button>
+  </div>
+  <div class="perfil">
+  <img id="fotoPerfil" src="/static/img/perfil-padrao.png">
+  </button>
+</div>
+
+</header>
+
+<main class="content" id="content">
+  <div class="user-container" id="minhaConta">
+
+    <h1>Minha Conta</h1>
+
+
+    <!-- Foto -->
+    <div class="card">
+      <img id="fotoPreview" class="foto" src="{{ url_for('static', filename='img/user-default.png') }}">
+      <form id="fotoForm">
+        <input type="file" id="fotoInput" name="foto" accept="image/*">
+        <button type="submit" class="btn-demand">Enviar foto</button>
+      </form>
+    </div>
+
+    <!-- Dados -->
+    <form id="userForm" class="user-form">
+      <div class="form-row">
+        <label>Nome</label>
+        <input id="nome" type="text">
+      </div>
+
+      <div class="form-row">
+        <label>E-mail</label>
+        <input id="email" type="email">
+      </div>
+
+      <div class="form-row">
+        <label>Senha (opcional)</label>
+        <input id="senha" type="password">
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-demand">Salvar</button>
+        <button type="button" id="btnLogout" class="btn-reset">Sair</button>
+      </div>
+    </form>
+
+    <div id="resetFeedback" class="reset-feedback"></div>
+  </div>
+
+  <div class="user-container" id="pedidosContainer" style="display:none;">
+    <h1>🛒 Meu Carrinho</h1>
+
+    <div id="listaCarrinho"></div>
+
+    <h3 id="totalCarrinho"></h3>
+
+    <button onclick="finalizarCompra()" class="btn-demand">
+        💳 Finalizar Compra
+    </button>
+</div>
+
+<h2>📜 Histórico</h2>
+<div id="historico"></div>
+
+
+
+</main>
+
+<script src="{{ url_for('static', filename='usuario.js') }}"></script>
+<script src="{{ url_for('static', filename='perfil_global.js') }}"></script>
+
+</body>
+</html>

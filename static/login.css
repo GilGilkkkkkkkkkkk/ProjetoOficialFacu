@@ -131,3 +131,20 @@ body {
     font-size: 2rem;
   }
 }
+
+.cadastro-text {
+  margin-top: 15px;
+  color: #fff;
+  font-size: 14px;
+}
+
+.cadastro-link {
+  color: #ffd1ff;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.cadastro-link:hover {
+  text-decoration: underline;
+  color: #ffffff;
+}

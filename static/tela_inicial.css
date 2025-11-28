@@ -1,0 +1,294 @@
+/* ===== CORPO DO SITE ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  background-color: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== BARRA SUPERIOR ===== */
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: #2f0d38;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 25px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  z-index: 10;
+}
+
+/* ===== LOGO ===== */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo img {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+}
+
+.logo h2 {
+  color: white;
+  font-size: 20px;
+  letter-spacing: 1px;
+}
+
+/* ===== BARRA DE PESQUISA ===== */
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: #f1f1f1;
+  border-radius: 25px;
+  padding: 5px 10px;
+  flex: 1;
+  max-width: 400px;
+  margin: 0 20px;
+}
+
+.search-bar input {
+  border: none;
+  outline: none;
+  background: none;
+  padding: 5px;
+  width: 100%;
+}
+
+.search-bar button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* ===== BOLINHA DE PERFIL ===== */
+.perfil-container {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.perfil-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ===== POPUP LOGIN ===== */
+.popup {
+  position: fixed;
+  top: 0; 
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+}
+
+.popup-box {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  width: 280px;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.popup-box button {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  background: #2f0d38;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.popup-box button:hover {
+  background: #4b1761;
+}
+
+.fechar {
+  color: #333;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+/* ===== CONTEÚDO PRINCIPAL ===== */
+main {
+  margin-top: 80px;
+  padding: 40px;
+}
+
+/* ===== SEÇÃO DE PRODUTOS ===== */
+.produtos {
+  text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 25px;
+}
+
+.produtos h2 {
+  width: 100%;
+  margin-bottom: 30px;
+  color: #333;
+  font-size: 2rem;
+}
+
+/* ===== CARD DE PRODUTO ===== */
+/* ====== CARD DO PRODUTO ====== */
+.produto {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transition: 0.2s;
+    width: 240px; /* opcional */
+}
+
+.produto:hover {
+    transform: scale(1.03);
+}
+
+/* Imagem */
+.produto img {
+    width: 100%;
+    height: 180px;
+    object-fit: contain;
+}
+
+/* 🔽 Nome do produto – menor */
+.produto h3 {
+    font-size: 14px;     /* tamanho reduzido */
+    font-weight: 500;
+    color: #333;
+    min-height: 40px;    /* mesma altura para todos */
+    margin-top: 10px;
+}
+
+/* 🔼 Preço – maior */
+.produto .preco {
+    font-size: 20px;     /* aumentado */
+    font-weight: bold;
+    color: #8a0fb7;      /* roxo mais destacado */
+    margin-top: 8px;
+}
+
+/* Link */
+.link-produto {
+    text-decoration: none;
+    color: inherit;
+}
+
+
+/* ===== POPUP ===== */
+.popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  align-items: center;
+  justify-content: center;
+}
+
+.popup-box {
+  background: white;
+  padding: 25px;
+  width: 300px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.popup-box button {
+  width: 100%;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  background: #2f0d38;
+  color: white;
+  cursor: pointer;
+}
+
+.fechar {
+  margin-top: 10px;
+  cursor: pointer;
+  color: #444;
+}
+
+.perfil-img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 2px solid #1f3864; /* borda azul marinha */
+    padding: 5px;
+    object-fit: cover;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.perfil-img:hover {
+    transform: scale(1.1);
+}
+
+.produto {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transition: 0.2s;
+    width: 240px;
+}
+
+.produto img {
+    width: 100%;
+    height: 180px;
+    object-fit: contain;
+}
+
+.produto h3 {
+    font-size: 14px;
+    font-weight: 500;
+    min-height: 40px;
+    margin-top: 10px;
+}
+
+.produto .preco {
+    font-size: 20px;
+    font-weight: bold;
+    color: #8a0fb7;
+    margin-top: 8px;
+}

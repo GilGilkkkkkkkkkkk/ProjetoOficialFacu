@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Painel Administrativo</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="logo" id="logo">
+      <img src="{{ url_for('static', filename='IMG/Logo/Logo.jpeg') }}" alt="Logo">
+      <h2>UniPeças</h2>
+    </div>
+    <nav>
+      <ul>
+        <li class="menu-item active" data-screen="Dashboard">🏠 Dashboard</li>
+        <li class="menu-item" data-screen="Produtos">📦 Produtos</li>
+        <li class="menu-item" data-screen="Vendas">📈 Vendas</li>
+        <li class="menu-item" data-screen="Usuarios">👤 Usuários</li>
+        <li class="menu-item" data-screen="Configuracoes">⚙️ Configurações</li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Barra superior -->
+  <header class="topbar">
+    <button id="btnMenu" class="menu-toggle" aria-label="Abrir menu"></button>
+    <div class="search-bar">
+      <input type="text" placeholder="Pesquisar...">
+      <button>🔍</button>
+    </div>
+    <div class="profile">
+      <div class="profile-pic"></div>
+      
+      <div class="side-menu" id="sideMenu">
+        <h2>Meu Perfil</h2>
+        <ul>
+          <li>Minha Conta</li>
+          <li>Configurações</li>
+          <li>Carrinho</li>
+          <li>Sair</li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <!-- Conteúdo principal dinâmico -->
+  <main class="content" id="content">
+    <h1>📦 Painel Administrativo</h1>
+  </main>
+
+  <script src="{{ url_for('static', filename='admin.js') }}"></script>
+  <script type="module" src="{{ url_for('static', filename='api.js') }}"></script>
+
+</body>
+</html>

@@ -1,0 +1,370 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body {
+  display: flex;
+  background-color: #e9d8ed;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 230px;
+  height: 100vh;
+  background-color: #2f0d38;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  transition: width 0.3s ease;
+  z-index: 100;
+}
+
+.sidebar.collapsed {
+  width: 70px;
+}
+
+.sidebar .logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px;
+  cursor: pointer;
+}
+
+.sidebar .logo img {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+}
+
+.sidebar.collapsed .logo h2 {
+  display: none;
+}
+
+.sidebar nav ul {
+  list-style: none;
+}
+
+.sidebar nav ul li {
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.sidebar nav ul li:hover,
+.sidebar nav ul li.active {
+  background-color: #16213e;
+}
+
+/* ===== TOPBAR ===== */
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 230px;
+  right: 0;
+  height: 60px;
+  background-color: #2f0d38;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 25px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: left 0.3s ease;
+  z-index: 10;
+}
+
+.sidebar.collapsed ~ .topbar {
+  left: 70px;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: #f1f1f1;
+  border-radius: 25px;
+  padding: 5px 10px;
+  flex: 1;
+  max-width: 400px;
+}
+
+.search-bar input {
+  border: none;
+  outline: none;
+  background: none;
+  padding: 5px;
+  width: 100%;
+}
+
+.search-bar button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.profile .profile-pic {
+  width: 40px;
+  height: 40px;
+  background-color: #ccc;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.profile .profile-pic:hover {
+  background-color: #888;
+}
+
+/* ===== CONTEÚDO ===== */
+.content {
+  margin-left: 230px;
+  margin-top: 80px;
+  padding: 20px;
+  width: calc(100% - 230px);
+  transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+.content.expanded {
+  margin-left: 70px;
+  width: calc(100% - 70px);
+}
+
+
+/* ====== Aba de Configuraçao ====== */
+.config-container {
+  background-color: #fff;
+  padding: 25px 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  max-width: 600px;
+  margin-top: 20px;
+}
+
+.config-container h2 {
+  color: #2f0d38;
+  margin-bottom: 15px;
+}
+
+.config-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.config-item label {
+  font-weight: bold;
+  color: #333;
+  flex: 1;
+}
+
+.config-item input[type="text"],
+.config-item input[type="number"],
+.config-item select {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease;
+}
+
+.config-item input:focus,
+.config-item select:focus {
+  border-color: #2f0d38;
+}
+
+/* ====== BOTÃO SALVAR ====== */
+.btn-demand {
+  background-color: #2f0d38;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  margin-top: 20px;
+  transition: background 0.3s ease;
+}
+
+.btn-demand:hover {
+  background-color: #431a4f;
+}
+
+
+/* ====== TELA USUÁRIO ====== */
+.user-container {
+  background-color: #f7eef8;
+  padding: 28px;
+  border-radius: 12px;
+  max-width: 820px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.user-container h1 {
+  color: #2f0d38;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-row label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #292929;
+}
+
+.form-row input {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #dcd0de;
+  outline: none;
+  font-size: 0.98rem;
+}
+
+.form-row input:focus {
+  border-color: #2f0d38;
+}
+
+/* senha com ação de mostrar */
+.password-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.password-row .pw-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.pw-actions {
+  display: flex;
+  align-items: center;
+}
+
+.mini-btn {
+  background: none;
+  border: 1px solid #ccc;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* área de botões */
+.form-actions {
+  margin-top: 8px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.btn-reset {
+  background-color: transparent;
+  border: 1px solid #b44e9f;
+  color: #b44e9f;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-reset:hover {
+  background-color: rgba(180,78,159,0.06);
+}
+
+/* feedback quando redefinir */
+.reset-feedback {
+  margin-top: 12px;
+  color: #2f0d38;
+  font-weight: 600;
+}
+
+.item-carrinho {
+  background: #fff;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.item-carrinho img {
+  border-radius: 6px;
+  height: 60px;
+  object-fit: cover;
+}
+
+
+/* FOTO PERFIL REDONDA (bolinha) */
+
+/* Foto grande da conta */
+#fotoPreview {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #2f0d38;
+}
+
+/* Bolinha do topo */
+#fotoPerfil {
+  width: 45px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  cursor: pointer;
+}
+
+
+.controle-qtd {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: 15px;
+}
+
+.btn-qtd {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: 1px solid #bca3d6;
+    cursor: pointer;
+    font-size: 20px;
+    background: white;
+    color: #3b004c;
+    transition: 0.2s;
+}
+
+.btn-qtd:hover {
+    background: #f1e4fb;
+}
+

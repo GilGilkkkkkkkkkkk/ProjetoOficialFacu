@@ -113,6 +113,10 @@ body {
 }
 
 /* ===== CONTEÚDO PRINCIPAL ===== */
+main{
+  flex: 1;
+}
+
 .produto-container {
   display: flex;
   gap: 40px;
@@ -265,11 +269,15 @@ hr {
   width: 100%;
 }
 
-/* ===== RESPONSIVIDADE ===== */
+/* ===== RESPONSIVIDADE (desktop como base) ===== */
+
+/* Tablets: até 900px */
 @media (max-width: 900px) {
   .produto-container {
     flex-direction: column;
     align-items: center;
+    margin: 100px 20px 50px 20px;
+    padding: 20px;
   }
 
   .galeria, .detalhes {
@@ -280,4 +288,192 @@ hr {
   .detalhes ul {
     text-align: left;
   }
+
+  .imagem-principal img {
+    max-width: 350px;
+  }
+
+  .miniaturas {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .miniaturas img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .detalhes h3 {
+    font-size: 18px;
+  }
+
+  .preco-atual {
+    font-size: 26px;
+  }
+
+  .botao-comprar, .botao-add {
+    width: 100%;
+    margin: 5px 0;
+  }
+}
+
+/* Smartphones: até 600px */
+@media (max-width: 600px) {
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto;
+    padding: 10px 15px;
+    gap: 10px;
+  }
+
+  .logo img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .logo h2 {
+    font-size: 16px;
+  }
+
+  .search-bar {
+    max-width: 100%;
+    margin: 5px 0;
+  }
+
+  .acesso a {
+    padding: 6px 12px;
+    font-size: 14px;
+    margin-left: 0;
+  }
+
+  .imagem-principal img {
+    max-width: 100%;
+  }
+
+  .miniaturas img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .detalhes h3 {
+    font-size: 16px;
+  }
+
+  .preco-atual {
+    font-size: 22px;
+  }
+
+  .detalhes ul {
+    font-size: 14px;
+  }
+}
+
+/* Smartphones muito pequenos: até 400px */
+@media (max-width: 400px) {
+  .logo img {
+    width: 25px;
+    height: 25px;
+  }
+
+  .logo h2 {
+    font-size: 14px;
+  }
+
+  .botao-comprar, .botao-add {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .detalhes h3 {
+    font-size: 14px;
+  }
+
+  .topbar {
+    padding: 8px 10px;
+  }
+}
+.popup {
+  position: fixed;
+  top: 0; 
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+}
+
+.popup-box {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  width: 280px;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.popup-box button {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  background: #2f0d38;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.fechar {
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.perfil-container {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.perfil-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.qtd-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 15px 0;
+}
+
+.qtd-btn {
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+    border: none;
+    background: #4a0a5c;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.qtd-btn:hover {
+    background: #5d0d75;
+}
+
+#qtdValor {
+    font-size: 20px;
+    font-weight: bold;
 }

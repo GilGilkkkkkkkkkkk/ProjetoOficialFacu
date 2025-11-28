@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>UniPeças - Página Inicial</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='tela_inicial.css') }}">
+</head>
+<body>
+
+  <!-- ======= BARRA SUPERIOR ======= -->
+  <header class="topbar">
+    <div class="logo">
+      <img src="{{ url_for('static', filename='IMG/Logo/Logo.jpeg') }}" alt="Logo UniPeças">
+      <h2>UniPeças</h2>
+    </div>
+
+    <div class="search-bar">
+      <input type="text" placeholder="Pesquisar...">
+      <button>🔍</button>
+    </div>
+
+    <div class="perfil-container">
+      <img id="fotoPerfil" class="perfil-img"
+        src="{{ url_for('static', filename='IMG/perfil-icon.png') }}">
+    </div>
+  </header>
+
+  <!-- ============================= -->
+  <!-- POPUP LOGIN / CADASTRO       -->
+  <!-- ============================= -->
+  <div id="popupLogin" class="popup" style="display: none;">
+    <div class="popup-box">
+      <h3>Você deseja:</h3>
+
+      <button id="btnLogin">Entrar</button>
+      <button id="btnCadastro">Criar Conta</button>
+
+      <p id="fecharPopup" class="fechar">Cancelar</p>
+    </div>
+  </div>
+
+  <!-- ============================= -->
+  <!-- POPUP DO USUÁRIO LOGADO      -->
+  <!-- ============================= -->
+  <div id="popupPerfil" class="popup" style="display: none;">
+    <div class="popup-box" id="popupPerfilBox">
+      <h3>Minha Conta</h3>
+
+      <!-- BOTÕES SERÃO MONTADOS VIA JS -->
+      <div id="areaBotoesPerfil"></div>
+
+      <p id="fecharPopupPerfil" class="fechar">Fechar</p>
+    </div>
+  </div>
+
+  <main>
+    <section class="produtos">
+      <h2>Produtos em Destaque</h2>
+
+      <div id="listaProdutos" class="produtos"></div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <p>&copy; 2025 UniPeças - Todos os direitos reservados</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='tela-inicial.js') }}"></script>
+  <script src="{{ url_for('static', filename='perfil_global.js') }}"></script>
+</body>
+</html>

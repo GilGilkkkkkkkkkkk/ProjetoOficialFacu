@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Produto</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='produtos.css') }}">
+</head>
+
+<body>
+
+<header class="topbar">
+    <div class="logo">
+        <img src="{{ url_for('static', filename='IMG/Logo/Logo.jpeg') }}" alt="Logo">
+        <h2>UniPeças</h2>
+    </div>
+
+    <div class="search-bar">
+        <input type="text" placeholder="Pesquisar...">
+        <button>🔍</button>
+    </div>
+
+    <!-- POPUP LOGIN -->
+<div id="popupLogin" class="popup" style="display: none;">
+  <div class="popup-box">
+    <h3>Você deseja:</h3>
+
+    <button id="btnLogin">Entrar</button>
+    <button id="btnCadastro">Criar Conta</button>
+
+    <p id="fecharPopup" class="fechar">Cancelar</p>
+  </div>
+</div>
+
+<!-- POPUP DE PERFIL -->
+<div id="popupPerfil" class="popup" style="display: none;">
+  <div class="popup-box">
+    <h3>Minha Conta</h3>
+
+    <button onclick="window.location.href='/tela_usuario'">Ver Perfil</button>
+    <button onclick="window.location.href='/pedidos'">Meus Pedidos</button>
+    <button onclick="window.location.href='/logout'">Sair</button>
+
+    <p id="fecharPopupPerfil" class="fechar">Fechar</p>
+  </div>
+</div>
+
+<div class="perfil-container">
+    <img id="fotoPerfil" class="perfil-img"
+    src="{{ url_for('static', filename='IMG/perfil-icon.png') }}">
+</div>
+
+</header>
+
+<main class="produto-container">
+
+    <section class="galeria">
+        <div class="imagem-principal">
+            <img id="imgPrincipal" src="" alt="">
+        </div>
+    </section>
+
+    <section class="detalhes">
+        <h3 id="nomeProduto"></h3>
+
+        <p class="marca">Vendido e entregue por <span>UniPeças</span></p>
+
+        <div class="preco-box">
+            <p class="preco-atual" id="precoProduto"></p>
+        </div>
+
+        <button class="botao-comprar">🛒 Comprar agora</button>
+        <button class="botao-add">➕ Adicionar ao carrinho</button>
+
+        <hr>
+
+        <h4>Sobre o produto</h4>
+        <p id="descricaoProduto"></p>
+
+        <p class="disponibilidade" id="estoqueProduto"></p>
+    </section>
+
+</main>
+
+<script> const ID_PRODUTO = "{{ produto_id }}"; </script>
+<script src="{{ url_for('static', filename='produtos.js') }}"></script>
+<script src="{{ url_for('static', filename='perfil_global.js') }}"></script>
+
+</body>
+</html>

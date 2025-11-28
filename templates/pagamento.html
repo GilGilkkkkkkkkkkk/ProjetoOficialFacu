@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Pagamento</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <link rel="stylesheet" href="{{ url_for('static', filename='pagamento.css') }}">
+</head>
+
+<body>
+
+  <!-- ======= BARRA SUPERIOR ======= -->
+  <header class="topbar">
+  
+  <div class="top-logo">
+    <img src="{{ url_for('static', filename='IMG/Logo/Logo.jpeg') }}" class="logo-img">
+    <h2>UniPeças</h2>
+  </div>
+
+  <div class="search-container">
+    <input type="text" placeholder="Pesquisar..." class="search-input">
+    <button class="search-btn">🔍</button>
+  </div>
+
+  <<div class="perfil-container">
+      <img id="fotoPerfil" class="perfil-img"
+        src="{{ url_for('static', filename='IMG/perfil-icon.png') }}">
+    </div>
+  
+</header>
+
+<div class="container">
+
+  <div class="card">
+      <h3> PRODUTOS</h3>
+      <div id="lista-produtos" class="lista-produtos"></div>
+  </div>
+
+  <div class="resumo">
+      <h3> RESUMO</h3>
+
+      <div class="linha">
+        <span>Valor dos Produtos:</span>
+        <b id="v-prod">R$ 0,00</b>
+      </div>
+
+      <div class="linha">
+        <span>Frete:</span>
+        <b id="v-frete">R$ 33,62</b>
+      </div>
+
+      <div class="linha">
+        <span>Total:</span>
+        <b id="v-total">R$ 0,00</b>
+      </div>
+
+      <div class="pix-box">
+        Valor com PIX: <span id="v-pix">R$ 0,00</span><br>
+        <small>(8% de desconto)</small>
+      </div>
+
+      <button class="btn" id="btn-finalizar">FINALIZAR COMPRA</button>
+      <button class="btn btn-voltar" onclick="history.back()">VOLTAR</button>
+  </div>
+
+
+</div>
+
+<script src="{{ url_for('static', filename='pagamento.js') }}"></script>
+<script src="{{ url_for('static', filename='perfil_global.js') }}"></script>
+</body>
+</html>
