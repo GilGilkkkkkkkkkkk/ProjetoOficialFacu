@@ -76,7 +76,7 @@ function inicializarMenuLateral() {
                 case "Produtos": abrirTelaProdutos(); break;
                 case "Vendas": abrirTelaVendas(); break;
                 case "Usuarios": carregarUsuarios(); break;
-                case "Configuracoes": abrirTelaConfig(); break;
+                case "Previsao": abrirTelaPrevisao(); break;
             }
         });
     });
@@ -522,9 +522,96 @@ async function abrirTelaVendas() {
 }
 
 
-function abrirTelaConfig() {
-    document.querySelector("main").innerHTML = `
-        <h1>⚙️ Configurações</h1>
-        <p>Ajustes gerais do sistema.</p>
+async function abrirTelaPrevisao() {
+
+    const main = document.querySelector("main");
+
+    main.innerHTML = `
+        <h1>🔮 Previsão de Demanda</h1>
+
+        <label for="produtoSelect">Selecione um produto:</label>
+        <select id="produtoSelect">
+            <option value="">Carregando...</option>
+        </select>
+
+        <div id="previsaoInfo" style="display:none; margin-top:20px;">
+            <h2 id="tituloProduto"></h2>
+
+            <canvas id="graficoPrevisao" width="500" height="250"></canvas>
+
+            <div class="previsao-numeros">
+                <p>📅 Próximo mês: <strong id="p1"></strong></p>
+                <p>📅 Em 2 meses: <strong id="p2"></strong></p>
+                <p>📅 Em 3 meses: <strong id="p3"></strong></p>
+            </div>
+        </div>
     `;
+
+    const select = document.getElementById("produtoSelect");
+
+    // ================================
+    // 1. Carregar lista de produtos
+    // ================================
+    const r = await fetch(`${API}/produtos`);
+    const produtos = await r.json();
+
+    select.innerHTML = `<option value="">Selecione...</option>`;
+
+    produtos.forEach(p => {
+        select.innerHTML += `
+            <option value="${p.id}">${p.nome}</option>
+        `;
+    });
+
+    // ================================
+    // 2. Quando selecionar um produto
+    // ================================
+    select.addEventListener("change", async () => {
+        const id = select.value;
+        if (!id) return;
+
+        const api = await fetch(`${API}/admin/previsao/${id}`, { credentials: "include" });
+        const dados = await api.json();
+
+        if (dados.erro) {
+            alert("Sem vendas suficientes para previsão.");
+            return;
+        }
+
+        document.getElementById("previsaoInfo").style.display = "block";
+        document.getElementById("tituloProduto").innerText = `📦 Produto: ${dados.produto_id}`;
+
+        // Números previstos
+        document.getElementById("p1").innerText = dados.previsao["+1_mes"];
+        document.getElementById("p2").innerText = dados.previsao["+2_mes"];
+        document.getElementById("p3").innerText = dados.previsao["+3_mes"];
+
+        // Histórico
+        const meses = Object.keys(dados.historico);
+        const valores = Object.values(dados.historico);
+
+        // Destruir gráfico antigo se existir
+        if (window.graficoPrevisaoInstance) {
+            window.graficoPrevisaoInstance.destroy();
+        }
+
+        // Criar novo gráfico
+        const ctx = document.getElementById("graficoPrevisao").getContext("2d");
+
+        window.graficoPrevisaoInstance = new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: meses,
+                datasets: [{
+                    label: "Vendas por mês",
+                    data: valores,
+                    borderColor: "#6a0dad",
+                    backgroundColor: "rgba(106, 13, 173, 0.3)",
+                    borderWidth: 2,
+                    tension: 0.3
+                }]
+            }
+        });
+    });
 }
+

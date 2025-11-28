@@ -5,6 +5,8 @@ from sqlalchemy.orm import declarative_base, sessionmaker, relationship
 from contextlib import contextmanager
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
+from datetime import datetime
+import numpy as np
 import os
 import sqlite3
 
@@ -454,6 +456,56 @@ def produtos_mais_vendidos():
             ranking[nome] = ranking.get(nome, 0) + item.quantidade
 
     return jsonify(ranking)
+
+# -----------------------------------------------------
+# PREVISÃO DE DEMANDA (REGRESSÃO LINEAR SIMPLES)
+# -----------------------------------------------------
+
+@app.route("/admin/previsao/<int:produto_id>", methods=["GET"])
+def previsao_demanda(produto_id):
+    if not admin_required():
+        return jsonify({"error": "Acesso negado"}), 403
+
+    with get_session() as s:
+        itens = (
+            s.query(PedidoItem, Pedido)
+            .join(Pedido, PedidoItem.pedido_id == Pedido.id)
+            .filter(PedidoItem.produto_id == produto_id)
+            .all()
+        )
+
+        # Sem vendas → sem previsão
+        if not itens:
+            return jsonify({"produto_id": produto_id, "erro": "Sem histórico de vendas"})
+
+        # Agrupar vendas por mês
+        vendas = {}
+
+        for item, pedido in itens:
+            mes = datetime.fromtimestamp(pedido.id).strftime("%Y-%m")  # mes/ano
+            vendas[mes] = vendas.get(mes, 0) + item.quantidade
+
+        # Ordenar por data
+        meses = sorted(vendas.keys())
+        y = np.array([vendas[m] for m in meses])   # vendas
+        x = np.arange(len(meses))                  # meses como números inteiros
+
+        # Regressão linear simples
+        a, b = np.polyfit(x, y, 1)
+
+        # Previsão para os próximos 3 meses
+        previsao = {}
+        for i in range(1, 4):
+            y_pred = a * (len(x) + i) + b
+            previsao[f"+{i}_mes"] = max(0, round(float(y_pred), 2))
+
+        return jsonify({
+            "produto_id": produto_id,
+            "historico": dict(vendas),
+            "tendencia": round(float(a), 4),
+            "previsao": previsao
+        })
+
 
 # -----------------------------------------------------
 # 🆕 ROTAS DE VENDAS (ADICIONADAS)
