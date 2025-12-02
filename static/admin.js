@@ -110,7 +110,7 @@ async function carregarUsuarios() {
     const lista = document.getElementById("listaUsuarios");
     lista.innerHTML = "<tr><td colspan='6'>Carregando...</td></tr>";
 
-    const resp = await fetch(`${API}/admin/usuarios`, { credentials: "include" });
+    const resp = await fetch(`${API_URL}/admin/usuarios`, { credentials: "include" });
     const users = await resp.json();
 
     lista.innerHTML = "";
@@ -140,7 +140,7 @@ async function carregarUsuarios() {
 async function bloquearUsuario(id) {
     if (!confirm("Alterar status do usuário?")) return;
 
-    await fetch(`${API}/admin/usuarios/${id}/bloquear`, {
+    await fetch(`${API_URL}/admin/usuarios/${id}/bloquear`, {
         method: "PUT",
         credentials: "include"
     });
@@ -153,7 +153,7 @@ async function bloquearUsuario(id) {
    5. EDITAR USUÁRIO (MODAL)
 ====================================================== */
 async function editarUsuario(id) {
-    const r = await fetch(`${API}/admin/usuarios/${id}`, { credentials: "include" });
+    const r = await fetch(`${API_URL}/admin/usuarios/${id}`, { credentials: "include" });
     const user = await r.json();
 
     const modal = document.createElement("div");
@@ -189,7 +189,7 @@ async function salvarUsuario(id) {
     const dados = { nome, email };
     if (senha.trim() !== "") dados.senha = senha;
 
-    await fetch(`${API}/admin/usuarios/${id}`, {
+    await fetch(`${API_URL}/admin/usuarios/${id}`, {
         method: "PUT",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -235,7 +235,7 @@ async function carregarTabelaProdutos() {
     const table = document.getElementById("listaProdutos");
     table.innerHTML = "<tr><td colspan='6'>Carregando...</td></tr>";
 
-    const resp = await fetch(`${API}/produtos`);
+    const resp = await fetch(`${API_URL}/produtos`);
     const produtos = await resp.json();
 
     table.innerHTML = "";
@@ -306,7 +306,7 @@ async function salvarNovoProduto() {
     form.append("estoque", estoque);
     if (imagem) form.append("imagem", imagem);
 
-    await fetch(`${API}/produtos`, {
+    await fetch(`${API_URL}/produtos`, {
         method: "POST",
         credentials: "include",
         body: form
@@ -321,7 +321,7 @@ async function salvarNovoProduto() {
    8. EDITAR PRODUTO
 ====================================================== */
 async function abrirModalEditarProduto(id) {
-    const resp = await fetch(`${API}/produtos/${id}`);
+    const resp = await fetch(`${API_URL}/produtos/${id}`);
     const p = await resp.json();
 
     const modal = document.createElement("div");
@@ -365,7 +365,7 @@ async function salvarEdicaoProduto(id) {
     const img = document.getElementById("editImagem").files[0];
     if (img) form.append("imagem", img);
 
-    await fetch(`${API}/produtos/${id}`, {
+    await fetch(`${API_URL}/produtos/${id}`, {
         method: "PUT",
         credentials: "include",
         body: form
@@ -382,7 +382,7 @@ async function salvarEdicaoProduto(id) {
 async function excluirProduto(id) {
     if (!confirm("Deseja realmente excluir este produto?")) return;
 
-    await fetch(`${API}/produtos/${id}`, {
+    await fetch(`${API_URL}/produtos/${id}`, {
         method: "DELETE",
         credentials: "include"
     });
@@ -416,7 +416,7 @@ async function abrirDashboard() {
     `;
 
     // Carregar resumo
-    const r = await fetch(`${API}/admin/dashboard/resumo`, { credentials: "include" });
+    const r = await fetch(`${API_URL}/admin/dashboard/resumo`, { credentials: "include" });
     const dados = await r.json();
 
     document.getElementById("c-usuarios").innerText = `👤 Usuários: ${dados.usuarios}`;
@@ -425,7 +425,7 @@ async function abrirDashboard() {
     document.getElementById("c-faturado").innerText = `💰 Faturado: R$ ${dados.faturado.toFixed(2)}`;
 
     // Gráfico de vendas
-    const g1 = await fetch(`${API}/admin/dashboard/grafico_vendas`, { credentials: "include" });
+    const g1 = await fetch(`${API_URL}/admin/dashboard/grafico_vendas`, { credentials: "include" });
     const vendas = await g1.json();
 
     new Chart(document.getElementById("graficoVendas"), {
@@ -440,7 +440,7 @@ async function abrirDashboard() {
     });
 
     // Gráfico produtos mais vendidos
-    const g2 = await fetch(`${API}/admin/dashboard/produtos_mais_vendidos`, { credentials: "include" });
+    const g2 = await fetch(`${API_URL}/admin/dashboard/produtos_mais_vendidos`, { credentials: "include" });
     const ranking = await g2.json();
 
     new Chart(document.getElementById("graficoProdutos"), {
@@ -490,7 +490,7 @@ async function abrirTelaVendas() {
     `;
 
     // --------- CARREGAR PEDIDOS ---------
-    const pedidosResp = await fetch(`${API}/admin/vendas/pedidos`, { credentials: "include" });
+    const pedidosResp = await fetch(`${API_URL}/admin/vendas/pedidos`, { credentials: "include" });
     const pedidos = await pedidosResp.json();
 
     const tabelaPedidos = document.getElementById("tabelaPedidos");
@@ -507,7 +507,7 @@ async function abrirTelaVendas() {
     });
 
     // --------- CARREGAR TOP PRODUTOS ---------
-    const topResp = await fetch(`${API}/admin/vendas/top_produtos`, { credentials: "include" });
+    const topResp = await fetch(`${API_URL}/admin/vendas/top_produtos`, { credentials: "include" });
     const produtos = await topResp.json();
 
     const tabelaTop = document.getElementById("tabelaTopProdutos");
@@ -554,7 +554,7 @@ async function abrirTelaPrevisao() {
     // ================================
     // 1. Carregar lista de produtos
     // ================================
-    const r = await fetch(`${API}/produtos`);
+    const r = await fetch(`${API_URL}/produtos`);
     const produtos = await r.json();
 
     select.innerHTML = `<option value="">Selecione...</option>`;
@@ -572,7 +572,7 @@ async function abrirTelaPrevisao() {
         const id = select.value;
         if (!id) return;
 
-        const api = await fetch(`${API}/admin/previsao/${id}`, { credentials: "include" });
+        const api = await fetch(`${API_URL}/admin/previsao/${id}`, { credentials: "include" });
         const dados = await api.json();
 
         if (dados.erro) {
