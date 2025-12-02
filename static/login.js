@@ -1,4 +1,4 @@
-const API = "https://seu-projeto.up.railway.app"
+const API = "https://projetoficialfacu-production.up.railway.app";
 
 document.getElementById("formLogin").addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -14,6 +14,7 @@ document.getElementById("formLogin").addEventListener("submit", async (e) => {
     try {
         const r = await fetch(`${API}/login`, {
             method: "POST",
+            credentials: "include", // importante para manter sessão
             headers: {
                 "Content-Type": "application/json"
             },
@@ -27,9 +28,9 @@ document.getElementById("formLogin").addEventListener("submit", async (e) => {
             return;
         }
 
-        localStorage.setItem("token", dados.token);
+        // NÃO TEM TOKEN → REMOVIDO
+        // localStorage.setItem("token", dados.token);
 
-        // Redirecionamento automático
         if (dados.admin === true) {
             window.location.href = "/admin";
         } else {
