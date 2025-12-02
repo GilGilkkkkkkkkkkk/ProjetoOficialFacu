@@ -22,7 +22,7 @@ const fotoPerfil = document.getElementById("fotoPerfil");
 // CARREGAR USUÁRIO
 // ======================
 async function carregarUsuario() {
-  const r = await fetch(`${API}/usuario`, { credentials: "include" });
+  const r = await fetch(`${API_URL}/usuario`, { credentials: "include" });
 
   if (!r.ok) {
     window.location.href = "/login";
@@ -52,7 +52,7 @@ userForm.onsubmit = async (e) => {
 
   if (senha.value !== "") dados.senha = senha.value;
 
-  const r = await fetch(`${API}/usuario`, {
+  const r = await fetch(`${API_URL}/usuario`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
@@ -84,7 +84,7 @@ fotoForm.onsubmit = async (e) => {
   const fd = new FormData();
   fd.append("foto", fotoInput.files[0]);
 
-  const r = await fetch(`${API}/upload_foto`, {
+  const r = await fetch(`${API_URL}/upload_foto`, {
     method: "POST",
     body: fd,
     credentials: "include"
@@ -142,7 +142,7 @@ function ativarMenu(el) {
 // ALTERAR QUANTIDADE
 // ======================
 async function mudarQuantidade(produto_id, delta) {
-  await fetch(`${API}/carrinho`, {
+  await fetch(`${API_URL}/carrinho`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
@@ -156,7 +156,7 @@ async function mudarQuantidade(produto_id, delta) {
 // REMOVER ITEM
 // ======================
 async function mudarQuantidade(produto_id, delta) {
-  await fetch(`${API}/carrinho/quantidade`, {
+  await fetch(`${API_URL}/carrinho/quantidade`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
@@ -177,7 +177,7 @@ async function carregarCarrinho() {
 
   lista.innerHTML = "Carregando...";
 
-  const r = await fetch(`${API}/carrinho`, { credentials: "include" });
+  const r = await fetch(`${API_URL}/carrinho`, { credentials: "include" });
   const carrinho = await r.json();
 
   lista.innerHTML = "";
@@ -231,7 +231,7 @@ async function finalizarCompra() {
 async function carregarHistorico() {
   const div = document.getElementById("historico");
 
-  const r = await fetch(`${API}/pedidos`, { credentials: "include" });
+  const r = await fetch(`${API_URL}/pedidos`, { credentials: "include" });
   const pedidos = await r.json();
 
   if (!pedidos.length) {
