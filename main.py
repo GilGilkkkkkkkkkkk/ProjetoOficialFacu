@@ -169,7 +169,7 @@ def tela_pagamento():
 
 @app.route("/admin")
 def admin_page():
-    if "user_id" not in session or not session.get("Admin"):
+    if "user_id" not in session or not session.get("admin"):
         return redirect("/")
     return render_template("admin.html")
 
