@@ -809,3 +809,6 @@ def pedidos():
 if __name__ == "__main__":
     print(f"Rodando em http://{APP_HOST}:{APP_PORT}")
     app.run(host=APP_HOST, port=APP_PORT, debug=DEBUG)
+
+from flask_cors import CORS
+CORS(app, supports_credentials=True)

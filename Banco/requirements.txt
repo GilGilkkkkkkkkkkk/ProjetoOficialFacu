@@ -3,3 +3,5 @@ PyJWT
 email-validator
 passlib[bcrypt]
 requests
+flask-cors
+gunicorn
