@@ -24,11 +24,15 @@ async function apiRequest(url, method = "GET", data = null, isForm = false) {
     return await response.json();
 }
 
+
 // ========================
 // API
 // ========================
 export const api = {
 
+    // ---------------------
+    // AUTH
+    // ---------------------
     login: async (email, senha) => {
         return await apiRequest("/api/login", "POST", { email, senha });
     },
@@ -55,14 +59,9 @@ export const api = {
         return await apiRequest("/logout", "GET");
     },
 
-    criarCategoria: async (nome) => {
-        return await apiRequest("/categorias", "POST", { nome });
-    },
-
-    listarCategorias: async () => {
-        return await apiRequest("/categorias", "GET");
-    },
-
+    // ---------------------
+    // PRODUTOS
+    // ---------------------
     criarProduto: async (produtoForm) => {
         return await apiRequest("/produtos", "POST", produtoForm, true);
     },
@@ -75,5 +74,57 @@ export const api = {
         if (filtros.max) query += (query ? "&" : "?") + `max=${filtros.max}`;
 
         return await apiRequest(`/produtos${query}`, "GET");
+    },
+
+    // ---------------------
+    // 🔥 ADMIN — USUÁRIOS
+    // ---------------------
+    listarUsuarios: async () => {
+        return await apiRequest("/admin/usuarios", "GET");
+    },
+
+    pegarUsuario: async (id) => {
+        return await apiRequest(`/admin/usuarios/${id}`, "GET");
+    },
+
+    editarUsuario: async (id, dados) => {
+        return await apiRequest(`/admin/usuarios/${id}`, "PUT", dados);
+    },
+
+    bloquearUsuario: async (id) => {
+        return await apiRequest(`/admin/usuarios/${id}/bloquear`, "PUT");
+    },
+
+    // ---------------------
+    // 🔥 ADMIN — DASHBOARD
+    // ---------------------
+    resumoDashboard: async () => {
+        return await apiRequest("/admin/dashboard/resumo", "GET");
+    },
+
+    graficoVendas: async () => {
+        return await apiRequest("/admin/dashboard/grafico_vendas", "GET");
+    },
+
+    produtosMaisVendidos: async () => {
+        return await apiRequest("/admin/dashboard/produtos_mais_vendidos", "GET");
+    },
+
+    // ---------------------
+    // 🔥 ADMIN — VENDAS
+    // ---------------------
+    listaPedidos: async () => {
+        return await apiRequest("/admin/vendas/pedidos", "GET");
+    },
+
+    topProdutos: async () => {
+        return await apiRequest("/admin/vendas/top_produtos", "GET");
+    },
+
+    // ---------------------
+    // 🔥 ADMIN — PREVISÃO
+    // ---------------------
+    previsaoDoProduto: async (produtoId) => {
+        return await apiRequest(`/admin/previsao/${produtoId}`, "GET");
     }
 };
