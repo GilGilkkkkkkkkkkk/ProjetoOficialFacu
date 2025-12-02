@@ -754,7 +754,3 @@ def pedidos():
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000)
 
-
-from werkzeug.security import generate_password_hash
-print(generate_password_hash("admin123"))
-
