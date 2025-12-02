@@ -1,6 +1,7 @@
-flask
+Flask
 flask-cors
-sqlalchemy
-werkzeug
-numpy
 gunicorn
+sqlalchemy
+psycopg2-binary
+numpy
+werkzeug
