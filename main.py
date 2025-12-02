@@ -28,7 +28,8 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 if not DATABASE_URL:
-    raise RuntimeError("❌ ERRO: A variável DATABASE_URL não foi configurada no Railway!")
+    print("⚠️ AVISO: DATABASE_URL não encontrado! Usando SQLite temporariamente.")
+    DATABASE_URL = "sqlite:///banco_local.db"
 
 # Necessário para compatibilidade do PostgreSQL com SQLAlchemy
 if DATABASE_URL.startswith("postgres://"):
