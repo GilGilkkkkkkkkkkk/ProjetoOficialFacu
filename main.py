@@ -170,7 +170,7 @@ def login_page():
 
 @app.route("/cadastro")
 def cadastro_page():
-    return render_template("Cadastro.html")
+    return render_template("cadastro.html")
 
 @app.route("/pagamento")
 def tela_pagamento():
@@ -183,7 +183,7 @@ def tela_pagamento():
 def admin_page():
     if "user_id" not in session or session.get("admin") is not True:
         return redirect("/")
-    return render_template("Admin.html")
+    return render_template("admin.html")
 
 @app.route("/tela_usuario")
 def tela_usuario_page():
