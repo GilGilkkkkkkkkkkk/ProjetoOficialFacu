@@ -480,26 +480,25 @@ def previsao_demanda(produto_id):
             .all()
         )
 
-        # Sem vendas → sem previsão
         if not itens:
             return jsonify({"produto_id": produto_id, "erro": "Sem histórico de vendas"})
 
-        # Agrupar vendas por mês
         vendas = {}
 
         for item, pedido in itens:
-            mes = datetime.fromtimestamp(pedido.id).strftime("%Y-%m")  # mes/ano
+            # Como você não tem campo de data no banco
+            mes = datetime.now().strftime("%Y-%m")
             vendas[mes] = vendas.get(mes, 0) + item.quantidade
 
-        # Ordenar por data
         meses = sorted(vendas.keys())
-        y = np.array([vendas[m] for m in meses])   # vendas
-        x = np.arange(len(meses))                  # meses como números inteiros
+        y = np.array([vendas[m] for m in meses])
+        x = np.arange(len(meses))
 
-        # Regressão linear simples
+        if len(x) < 2:
+            return jsonify({"erro": "Poucos dados para previsão"})
+
         a, b = np.polyfit(x, y, 1)
 
-        # Previsão para os próximos 3 meses
         previsao = {}
         for i in range(1, 4):
             y_pred = a * (len(x) + i) + b
@@ -511,6 +510,7 @@ def previsao_demanda(produto_id):
             "tendencia": round(float(a), 4),
             "previsao": previsao
         })
+
 
 
 # -----------------------------------------------------
