@@ -1,4 +1,5 @@
-const API = "https://seu-projeto.up.railway.app"
+const API_URL = "https://projetoficialfacu-production.up.railway.app"; 
+
 
 // Função para enviar dados ao backend
 async function cadastrarUsuario(nome, email, senha) {

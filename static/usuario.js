@@ -1,4 +1,5 @@
-const API = "https://seu-projeto.up.railway.app"
+const API_URL = "https://projetoficialfacu-production.up.railway.app"; 
+
 
 console.log("usuario.js carregado!");
 
