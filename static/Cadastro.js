@@ -4,7 +4,7 @@ const API_URL = "https://projetooficialfacu-production.up.railway.app";
 
 // Função para enviar dados ao backend
 async function cadastrarUsuario(nome, email, senha) {
-    const response = await fetch(`${API_URL}/cadastro`, {
+    const response = await fetch(`${API_URL}/api/cadastro`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -25,13 +25,12 @@ document.getElementById("btnCadastrar").addEventListener("click", async () => {
 
     const r = await api.cadastrar(nome, email, senha);
 
-    if (resultado.error) {
-        alert("❌ " + resultado.error);
+    if (r.error) {
+        alert("❌ " + r.error);
         return;
     }
 
     alert("✔ Cadastro realizado com sucesso!");
-
-    // Redireciona para a rota correta do login
-    window.location.href = "/";
+    window.location.href = "/login";
 });
+
