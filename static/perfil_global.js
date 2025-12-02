@@ -15,7 +15,7 @@ async function carregarUsuarioGlobal() {
 
   try {
 
-    const r = await fetch(`${API}/usuario`, { credentials: "include" });
+    const r = await fetch(`${API_URL}/usuario`, { credentials: "include" });
 
     // ==========================
     // DESLOGADO
