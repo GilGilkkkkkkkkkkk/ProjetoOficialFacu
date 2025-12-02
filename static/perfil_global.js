@@ -1,5 +1,4 @@
-const API = "https://seu-projeto.up.railway.app"
-
+const API = "http://127.0.0.1:5000";
 
 // ==========================
 // PERFIL GLOBAL (TODAS TELAS)

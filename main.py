@@ -8,34 +8,31 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 import numpy as np
 import os
+import sqlite3
 
 # -----------------------------------------------------
 # CONFIG
 # -----------------------------------------------------
-
-app = Flask(__name__, static_folder="static", template_folder="templates")
-app.secret_key = "MINHA_CHAVE_SUPER_SECRETA_2025"
-CORS(app, supports_credentials=True)
+APP_HOST = "127.0.0.1"
+APP_PORT = 5000
+DEBUG = True
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = os.path.join(BASE_DIR, "static", "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # -----------------------------------------------------
-# DATABASE POSTGRESQL — Railway
+# FLASK
 # -----------------------------------------------------
+app = Flask(__name__, static_folder="static", template_folder="templates")
+app.secret_key = "MINHA_CHAVE_SUPER_SECRETA_2025"
+CORS(app, supports_credentials=True)
 
-DATABASE_URL = os.getenv("DATABASE_URL")
-
-if not DATABASE_URL:
-    print("⚠️ AVISO: DATABASE_URL não encontrado! Usando SQLite temporariamente.")
-    DATABASE_URL = "sqlite:///banco_local.db"
-
-# Necessário para compatibilidade do PostgreSQL com SQLAlchemy
-if DATABASE_URL.startswith("postgres://"):
-    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
-
-engine = create_engine(DATABASE_URL, echo=False)
+# -----------------------------------------------------
+# SQLALCHEMY
+# -----------------------------------------------------
+DB_PATH = os.path.join(BASE_DIR, "banco.db")
+engine = create_engine(f"sqlite:///{DB_PATH}", echo=False, connect_args={"check_same_thread": False})
 Session = sessionmaker(bind=engine)
 Base = declarative_base()
 
@@ -104,7 +101,6 @@ class PedidoItem(Base):
 # -----------------------------------------------------
 # SESSION MANAGER
 # -----------------------------------------------------
-
 @contextmanager
 def get_session():
     s = Session()
@@ -117,19 +113,32 @@ def get_session():
     finally:
         s.close()
 
-# -----------------------------------------------------
-# DATABASE INIT
-# -----------------------------------------------------
 
+# -----------------------------------------------------
+# DATABASE SETUP
+# -----------------------------------------------------
 def ensure_db():
     Base.metadata.create_all(engine)
+
+    # Garantir coluna de foto no usuário
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cur = conn.cursor()
+        cur.execute("PRAGMA table_info(usuarios);")
+        cols = [r[1] for r in cur.fetchall()]
+        if "foto" not in cols:
+            cur.execute("ALTER TABLE usuarios ADD COLUMN foto TEXT;")
+            conn.commit()
+        conn.close()
+    except:
+        pass
+
 
 ensure_db()
 
 # -----------------------------------------------------
 # DEFAULT ADMIN
 # -----------------------------------------------------
-
 def create_default_admin():
     with get_session() as s:
         if not s.query(Usuario).filter_by(email="admin@admin.com").first():
@@ -140,12 +149,12 @@ def create_default_admin():
                 admin=True
             ))
 
+
 create_default_admin()
 
 # -----------------------------------------------------
-# FRONT PAGES
+# FRONTEND ROUTES
 # -----------------------------------------------------
-
 @app.route("/")
 def tela_inicial_page():
     return render_template("tela_inicial.html")
@@ -153,6 +162,7 @@ def tela_inicial_page():
 @app.route("/tela_inicial")
 def tela_inicial_alias():
     return render_template("tela_inicial.html")
+
 
 @app.route("/login")
 def login_page():
@@ -168,15 +178,17 @@ def tela_pagamento():
         return redirect("/login")
     return render_template("pagamento.html")
 
+
 @app.route("/admin")
 def admin_page():
-    if "user_id" not in session or not session.get("admin"):
+    if "user_id" not in session or session.get("admin") is not True:
         return redirect("/")
     return render_template("admin.html")
 
 @app.route("/tela_usuario")
 def tela_usuario_page():
     return render_template("usuario.html")
+
 
 @app.route("/produto/<int:id>")
 def pagina_produto(id):
@@ -185,10 +197,9 @@ def pagina_produto(id):
 # -----------------------------------------------------
 # AUTH
 # -----------------------------------------------------
-
 @app.route("/login", methods=["POST"])
 def login():
-    dados = request.json
+    dados = request.json or {}
 
     with get_session() as s:
         user = s.query(Usuario).filter_by(email=dados.get("email")).first()
@@ -207,7 +218,7 @@ def login():
 
 @app.route("/cadastro", methods=["POST"])
 def cadastro():
-    dados = request.json
+    dados = request.json or {}
 
     with get_session() as s:
         if s.query(Usuario).filter_by(email=dados["email"]).first():
@@ -236,7 +247,6 @@ def logout():
 # -----------------------------------------------------
 # USUÁRIO
 # -----------------------------------------------------
-
 @app.route("/usuario", methods=["GET"])
 def usuario_logado():
     if "user_id" not in session:
@@ -259,7 +269,7 @@ def atualizar_usuario():
     if "user_id" not in session:
         return jsonify({"error": "Não autenticado"}), 401
 
-    dados = request.json
+    dados = request.json or {}
 
     with get_session() as s:
         user = s.query(Usuario).get(session["user_id"])
@@ -298,9 +308,9 @@ def upload_foto():
 # -----------------------------------------------------
 # ADMIN — GERENCIAMENTO DE USUÁRIOS
 # -----------------------------------------------------
-
 def admin_required():
-    return "user_id" in session and session.get("admin")
+    return "user_id" in session and session.get("admin") is True
+
 
 @app.route("/admin/usuarios", methods=["GET"])
 def listar_usuarios_admin():
@@ -346,11 +356,10 @@ def editar_usuario_admin(id):
     if not admin_required():
         return jsonify({"error": "Acesso negado"}), 403
 
-    dados = request.json
+    dados = request.json or {}
 
     with get_session() as s:
         u = s.query(Usuario).get(id)
-
         if not u:
             return jsonify({"error": "Usuário não encontrado"}), 404
 
@@ -400,7 +409,6 @@ def remover_usuario(id):
 # -----------------------------------------------------
 # DASHBOARD
 # -----------------------------------------------------
-
 @app.route("/admin/dashboard/resumo", methods=["GET"])
 def dashboard_resumo():
     if not admin_required():
@@ -450,7 +458,7 @@ def produtos_mais_vendidos():
     return jsonify(ranking)
 
 # -----------------------------------------------------
-# PREVISÃO DE DEMANDA
+# PREVISÃO DE DEMANDA (REGRESSÃO LINEAR SIMPLES)
 # -----------------------------------------------------
 
 @app.route("/admin/previsao/<int:produto_id>", methods=["GET"])
@@ -466,35 +474,84 @@ def previsao_demanda(produto_id):
             .all()
         )
 
+        # Sem vendas → sem previsão
         if not itens:
-            return jsonify({"erro": "Sem histórico de vendas"})
+            return jsonify({"produto_id": produto_id, "erro": "Sem histórico de vendas"})
 
+        # Agrupar vendas por mês
         vendas = {}
+
         for item, pedido in itens:
-            mes = datetime.fromtimestamp(pedido.id).strftime("%Y-%m")
+            mes = datetime.fromtimestamp(pedido.id).strftime("%Y-%m")  # mes/ano
             vendas[mes] = vendas.get(mes, 0) + item.quantidade
 
+        # Ordenar por data
         meses = sorted(vendas.keys())
-        y = np.array([vendas[m] for m in meses])
-        x = np.arange(len(meses))
+        y = np.array([vendas[m] for m in meses])   # vendas
+        x = np.arange(len(meses))                  # meses como números inteiros
 
+        # Regressão linear simples
         a, b = np.polyfit(x, y, 1)
 
+        # Previsão para os próximos 3 meses
         previsao = {}
         for i in range(1, 4):
             y_pred = a * (len(x) + i) + b
             previsao[f"+{i}_mes"] = max(0, round(float(y_pred), 2))
 
         return jsonify({
-            "historico": vendas,
+            "produto_id": produto_id,
+            "historico": dict(vendas),
             "tendencia": round(float(a), 4),
             "previsao": previsao
         })
 
+
+# -----------------------------------------------------
+# 🆕 ROTAS DE VENDAS (ADICIONADAS)
+# -----------------------------------------------------
+
+@app.route("/admin/vendas/pedidos", methods=["GET"])
+def admin_vendas_pedidos():
+    if not admin_required():
+        return jsonify({"error": "Acesso negado"}), 403
+
+    with get_session() as s:
+        pedidos = s.query(Pedido).all()
+
+        return jsonify([
+            {
+                "id": p.id,
+                "usuario": s.query(Usuario).get(p.usuario_id).nome,
+                "total": float(p.total)
+            }
+            for p in pedidos
+        ])
+
+
+@app.route("/admin/vendas/top_produtos", methods=["GET"])
+def admin_top_produtos():
+    if not admin_required():
+        return jsonify({"error": "Acesso negado"}), 403
+
+    with get_session() as s:
+        itens = s.query(PedidoItem).all()
+
+        ranking = {}
+        for item in itens:
+            nome = item.produto.nome
+            ranking[nome] = ranking.get(nome, 0) + item.quantidade
+
+        ranking_ordenado = sorted(ranking.items(), key=lambda x: x[1], reverse=True)
+
+    return jsonify([
+        {"nome": nome, "quantidade": qtd}
+        for nome, qtd in ranking_ordenado
+    ])
+
 # -----------------------------------------------------
 # PRODUTOS
 # -----------------------------------------------------
-
 @app.route("/produtos", methods=["GET"])
 def listar_produtos():
     with get_session() as s:
@@ -544,7 +601,7 @@ def criar_produto():
         )
         s.add(novo)
 
-    return jsonify({"message": "Produto cadastrado com sucesso"})
+    return jsonify({"ok": True, "message": "Produto cadastrado com sucesso"})
 
 
 @app.route("/produtos/<int:id>", methods=["GET"])
@@ -603,7 +660,6 @@ def excluir_produto(id):
 # -----------------------------------------------------
 # CARRINHO
 # -----------------------------------------------------
-
 @app.route("/carrinho", methods=["GET"])
 def listar_carrinho():
     if "user_id" not in session:
@@ -629,7 +685,7 @@ def adicionar_ao_carrinho():
     if "user_id" not in session:
         return jsonify({"error": "Não autenticado"}), 401
 
-    dados = request.json
+    dados = request.json or {}
     produto_id = dados.get("produto_id")
     quantidade = dados.get("quantidade", 1)
 
@@ -651,15 +707,14 @@ def adicionar_ao_carrinho():
 
     return jsonify({"message": "Adicionado com sucesso"})
 
-
 @app.route("/carrinho/quantidade", methods=["PUT"])
 def alterar_quantidade():
     if "user_id" not in session:
         return jsonify({"error": "Não autenticado"}), 401
 
-    dados = request.json
+    dados = request.json or {}
     produto_id = dados.get("produto_id")
-    delta = dados.get("quantidade", 0)
+    delta = dados.get("quantidade", 0)  # +1 ou -1
 
     with get_session() as s:
         item = s.query(CarrinhoItem).filter_by(
@@ -677,7 +732,6 @@ def alterar_quantidade():
             return jsonify({"message": "Item removido"})
 
     return jsonify({"message": "Quantidade atualizada"})
-
 
 @app.route("/carrinho/<int:produto_id>", methods=["DELETE"])
 def remover_do_carrinho(produto_id):
@@ -697,10 +751,12 @@ def remover_do_carrinho(produto_id):
 
     return jsonify({"message": "Item removido"})
 
+
+
+
 # -----------------------------------------------------
 # CHECKOUT
 # -----------------------------------------------------
-
 @app.route("/checkout", methods=["POST"])
 def checkout():
     if "user_id" not in session:
@@ -732,9 +788,8 @@ def checkout():
     return jsonify({"message": "Pedido finalizado", "total": total})
 
 # -----------------------------------------------------
-# PEDIDOS DO USUÁRIO
+# PEDIDOS
 # -----------------------------------------------------
-
 @app.route("/pedidos", methods=["GET"])
 def pedidos():
     if "user_id" not in session:
@@ -749,8 +804,8 @@ def pedidos():
         ])
 
 # -----------------------------------------------------
-# RUN (Railway usa host 0.0.0.0)
+# RUN
 # -----------------------------------------------------
-
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000)
+    print(f"Rodando em http://{APP_HOST}:{APP_PORT}")
+    app.run(host=APP_HOST, port=APP_PORT, debug=DEBUG)

@@ -1,8 +1,7 @@
 // =========================
 // CONFIGURAÇÃO API
 // =========================
-const API = "https://seu-projeto.up.railway.app"
-
+const API_URL = "http://127.0.0.1:5000";
 
 // =========================
 // POPUPS LOGIN / PERFIL
