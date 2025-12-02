@@ -1,0 +1,5 @@
+Flask
+PyJWT
+email-validator
+passlib[bcrypt]
+requests
