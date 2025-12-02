@@ -5,3 +5,5 @@ passlib[bcrypt]
 requests
 flask-cors
 gunicorn
+SQLAlchemy
+numpy
