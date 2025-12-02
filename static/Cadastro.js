@@ -1,5 +1,4 @@
-const API_URL = "https://projetoficialfacu-production.up.railway.app"; 
-
+const API_URL = "http://127.0.0.1:5000";
 
 // Função para enviar dados ao backend
 async function cadastrarUsuario(nome, email, senha) {

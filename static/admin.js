@@ -1,5 +1,4 @@
-const API_URL = "https://projetoficialfacu-production.up.railway.app"; 
-
+const API = "http://127.0.0.1:5000";
 
 /* ======================================================
    1. SIDEBAR + MENU DO PERFIL
