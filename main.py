@@ -176,7 +176,7 @@ def login_page():
 
 @app.route("/cadastro")
 def cadastro_page():
-    return render_template("cadastro.html")
+    return render_template("Cadastro.html")
 
 @app.route("/pagamento")
 def tela_pagamento():
@@ -189,7 +189,7 @@ def tela_pagamento():
 def admin_page():
     if "user_id" not in session or session.get("admin") is not True:
         return redirect("/")
-    return render_template("admin.html")
+    return render_template("Admin.html")
 
 @app.route("/tela_usuario")
 def tela_usuario_page():
@@ -198,7 +198,7 @@ def tela_usuario_page():
 
 @app.route("/produto/<int:id>")
 def pagina_produto(id):
-    return render_template("produtos.html", produto_id=id)
+    return render_template("Produtos.html", produto_id=id)
 
 # -----------------------------------------------------
 # AUTH
