@@ -16,14 +16,14 @@ async function cadastrarUsuario(nome, email, senha) {
 }
 
 // Captura o envio do formulário
-document.getElementById("formCadastro").addEventListener("submit", async (e) => {
-    e.preventDefault();
+import { api } from "./api.js";
 
+document.getElementById("btnCadastrar").addEventListener("click", async () => {
     const nome = document.getElementById("nome").value;
     const email = document.getElementById("email").value;
     const senha = document.getElementById("senha").value;
 
-    const resultado = await cadastrarUsuario(nome, email, senha);
+    const r = await api.cadastrar(nome, email, senha);
 
     if (resultado.error) {
         alert("❌ " + resultado.error);

@@ -42,7 +42,7 @@ export const api = {
 
     cadastrar: async (nome, email, senha) => {
     return await apiRequest("/api/cadastro", "POST", { nome, email, senha });
-  },
+   },
 
     usuarioLogado: async () => {
         return await apiRequest("/usuario", "GET");
