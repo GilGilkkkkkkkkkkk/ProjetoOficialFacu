@@ -1,7 +1,5 @@
 const API_URL = "https://projetooficialfacu-production.up.railway.app";
 
-
-
 // ========================
 // FUNÇÃO PADRÃO REQUEST
 // ========================
@@ -9,7 +7,7 @@ async function apiRequest(url, method = "GET", data = null, isForm = false) {
 
     const options = {
         method,
-        credentials: "include", // COOKIE DO FLASK
+        credentials: "include",
         headers: {}
     };
 
@@ -23,9 +21,7 @@ async function apiRequest(url, method = "GET", data = null, isForm = false) {
     }
 
     const response = await fetch(API_URL + url, options);
-
-    const result = await response.json();
-    return result;
+    return await response.json();
 }
 
 // ========================
@@ -33,16 +29,13 @@ async function apiRequest(url, method = "GET", data = null, isForm = false) {
 // ========================
 export const api = {
 
-    // ========================
-    // AUTH
-    // ========================
-    login: async (email, senha, next="/") => {
-        return await apiRequest("/api/login", "POST", { email, senha, next });
+    login: async (email, senha) => {
+        return await apiRequest("/api/login", "POST", { email, senha });
     },
 
     cadastrar: async (nome, email, senha) => {
-    return await apiRequest("/api/cadastro", "POST", { nome, email, senha });
-   },
+        return await apiRequest("/api/cadastro", "POST", { nome, email, senha });
+    },
 
     usuarioLogado: async () => {
         return await apiRequest("/usuario", "GET");
@@ -62,9 +55,6 @@ export const api = {
         return await apiRequest("/logout", "GET");
     },
 
-    // ========================
-    // CATEGORIAS
-    // ========================
     criarCategoria: async (nome) => {
         return await apiRequest("/categorias", "POST", { nome });
     },
@@ -73,9 +63,6 @@ export const api = {
         return await apiRequest("/categorias", "GET");
     },
 
-    // ========================
-    // PRODUTOS
-    // ========================
     criarProduto: async (produtoForm) => {
         return await apiRequest("/produtos", "POST", produtoForm, true);
     },
@@ -88,41 +75,5 @@ export const api = {
         if (filtros.max) query += (query ? "&" : "?") + `max=${filtros.max}`;
 
         return await apiRequest(`/produtos${query}`, "GET");
-    },
-
-    // ========================
-    // CARRINHO
-    // ========================
-    addCarrinho: async (produto_id, quantidade = 1) => {
-        return await apiRequest("/carrinho", "POST", {
-            produto_id,
-            quantidade
-        });
-    },
-
-    listarCarrinho: async () => {
-        return await apiRequest("/carrinho", "GET");
-    },
-
-    atualizarCarrinho: async (produto_id, quantidade) => {
-        return await apiRequest("/carrinho", "PUT", {
-            produto_id,
-            quantidade
-        });
-    },
-
-    removerCarrinho: async (produto_id) => {
-        return await apiRequest(`/carrinho/${produto_id}`, "DELETE");
-    },
-
-    checkout: async () => {
-        return await apiRequest("/checkout", "POST");
-    },
-
-    // ========================
-    // PEDIDOS
-    // ========================
-    listarPedidos: async () => {
-        return await apiRequest("/pedidos", "GET");
     }
 };

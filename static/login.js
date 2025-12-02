@@ -1,20 +1,13 @@
 const API_URL = "https://projetooficialfacu-production.up.railway.app";
 
-
-
 document.getElementById("formLogin").addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const email = document.getElementById("email").value;
     const senha = document.getElementById("senha").value;
 
-    if (!email || !senha) {
-        alert("Preencha todos os campos!");
-        return;
-    }
-
     try {
-        const r = await fetch(`${API}/login`, {
+        const r = await fetch(`${API_URL}/api/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -29,9 +22,6 @@ document.getElementById("formLogin").addEventListener("submit", async (e) => {
             return;
         }
 
-        localStorage.setItem("token", dados.token);
-
-        // Redirecionamento automático
         if (dados.admin === true) {
             window.location.href = "/admin";
         } else {

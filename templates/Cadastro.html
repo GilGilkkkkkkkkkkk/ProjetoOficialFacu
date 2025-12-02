@@ -4,31 +4,37 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cadastro de Usuário</title>
+
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='Cadastro.css') }}">
 </head>
+
 <body>
   <div class="cadastro-container">
     <img src="{{ url_for('static', filename='IMG/Logo/Logo.jpeg') }}" alt="Logo">
     <h2>Faça seu Cadastro!</h2>
+
     <form id="formCadastro">
       <div class="form-group">
         <label for="nome">Nome</label>
         <input type="text" id="nome" name="nome" required>
       </div>
+
       <div class="form-group">
         <label for="email">Email</label>
         <input type="email" id="email" name="email" required>
       </div>
+
       <div class="form-group">
         <label for="senha">Senha</label>
         <input type="password" id="senha" name="senha" required>
       </div>
+
       <button type="submit">Cadastrar</button>
     </form>
   </div>
 
-  <script src="{{ url_for('static', filename='Cadastro.js') }}"></script>
-  <script type="module" src="{{ url_for('static', filename='api.js') }}"></script>
+  <!-- SOMENTE O SCRIPT DO CADASTRO -->
+  <script type="module" src="{{ url_for('static', filename='Cadastro.js') }}"></script>
 </body>
 </html>
