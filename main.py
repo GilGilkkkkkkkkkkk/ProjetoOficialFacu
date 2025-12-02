@@ -26,7 +26,13 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 # -----------------------------------------------------
 app = Flask(__name__, static_folder="static", template_folder="templates")
 app.secret_key = "MINHA_CHAVE_SUPER_SECRETA_2025"
-CORS(app, supports_credentials=True)
+CORS(
+    app,
+    supports_credentials=True,
+    resources={r"/*": {"origins": "*"}}
+)
+
+
 
 # -----------------------------------------------------
 # SQLALCHEMY
@@ -197,7 +203,7 @@ def pagina_produto(id):
 # -----------------------------------------------------
 # AUTH
 # -----------------------------------------------------
-@app.route("/login", methods=["POST"])
+@app.route("/api/login", methods=["POST"])
 def login():
     dados = request.json or {}
 
@@ -216,7 +222,7 @@ def login():
         return jsonify({"ok": True, "admin": user.admin})
 
 
-@app.route("/cadastro", methods=["POST"])
+@app.route("/api/cadastro", methods=["POST"])
 def cadastro():
     dados = request.json or {}
 
@@ -802,6 +808,12 @@ def pedidos():
             {"id": p.id, "total": float(p.total)}
             for p in pedidos
         ])
+
+@app.after_request
+def apply_cors(response):
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+    return response
+
 
 # -----------------------------------------------------
 # RUN

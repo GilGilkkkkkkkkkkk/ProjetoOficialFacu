@@ -1,4 +1,5 @@
-const API_URL = "https://nome-do-seu-projeto.up.railway.app";
+const API_URL = "https://projetooficialfacu-production.up.railway.app";
+
 
 
 /* ======================================================

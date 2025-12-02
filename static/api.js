@@ -1,4 +1,5 @@
-const API_URL = "https://nome-do-seu-projeto.up.railway.app";
+const API_URL = "https://projetooficialfacu-production.up.railway.app";
+
 
 
 // ========================
@@ -36,11 +37,11 @@ export const api = {
     // AUTH
     // ========================
     login: async (email, senha, next="/") => {
-        return await apiRequest("/login", "POST", { email, senha, next });
+        return await apiRequest("/api/login", "POST", { email, senha, next });
     },
 
     cadastrar: async (nome, email, senha) => {
-        return await apiRequest("/cadastro", "POST", { nome, email, senha });
+        return await apiRequest("/api/login", "POST", { email, senha, next });
     },
 
     usuarioLogado: async () => {
