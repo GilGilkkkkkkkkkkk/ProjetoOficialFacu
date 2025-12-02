@@ -32,8 +32,6 @@ CORS(
     resources={r"/*": {"origins": "*"}}
 )
 
-
-
 # -----------------------------------------------------
 # SQLALCHEMY
 # -----------------------------------------------------
@@ -56,12 +54,10 @@ class Usuario(Base):
     bloqueado = Column(Boolean, default=False)
     foto = Column(String, nullable=True)
 
-
 class Categoria(Base):
     __tablename__ = "categorias"
     id = Column(Integer, primary_key=True)
     nome = Column(String, nullable=False, unique=True)
-
 
 class Produto(Base):
     __tablename__ = "produtos"
@@ -74,7 +70,6 @@ class Produto(Base):
     categoria_id = Column(Integer, ForeignKey("categorias.id"))
     categoria = relationship("Categoria")
 
-
 class CarrinhoItem(Base):
     __tablename__ = "carrinho_items"
     id = Column(Integer, primary_key=True)
@@ -84,13 +79,12 @@ class CarrinhoItem(Base):
     produto = relationship("Produto")
     usuario = relationship("Usuario")
 
-
 class Pedido(Base):
     __tablename__ = "pedidos"
     id = Column(Integer, primary_key=True)
     usuario_id = Column(Integer, ForeignKey("usuarios.id"))
     total = Column(Float)
-
+    data = Column(String, default=lambda: datetime.now().strftime("%Y-%m-%d"))  # 🟢 DATA DO PEDIDO
 
 class PedidoItem(Base):
     __tablename__ = "pedido_itens"
@@ -102,7 +96,6 @@ class PedidoItem(Base):
 
     pedido = relationship("Pedido")
     produto = relationship("Produto")
-
 
 # -----------------------------------------------------
 # SESSION MANAGER
@@ -119,25 +112,25 @@ def get_session():
     finally:
         s.close()
 
-
 # -----------------------------------------------------
-# DATABASE SETUP
+# DATABASE SETUP + MIGRATION
 # -----------------------------------------------------
 def ensure_db():
     Base.metadata.create_all(engine)
 
-    # Garantir coluna de foto no usuário
+    # MIGRAÇÃO: adicionar coluna "data" se não existir
     try:
         conn = sqlite3.connect(DB_PATH)
         cur = conn.cursor()
-        cur.execute("PRAGMA table_info(usuarios);")
+        cur.execute("PRAGMA table_info(pedidos);")
         cols = [r[1] for r in cur.fetchall()]
-        if "foto" not in cols:
-            cur.execute("ALTER TABLE usuarios ADD COLUMN foto TEXT;")
+        if "data" not in cols:
+            print("🔧 Adicionando coluna data ao banco...")
+            cur.execute("ALTER TABLE pedidos ADD COLUMN data TEXT")
             conn.commit()
         conn.close()
-    except:
-        pass
+    except Exception as e:
+        print("Erro ao migrar banco:", e)
 
 
 ensure_db()
@@ -155,7 +148,6 @@ def create_default_admin():
                 admin=True
             ))
 
-
 create_default_admin()
 
 # -----------------------------------------------------
@@ -168,7 +160,6 @@ def tela_inicial_page():
 @app.route("/tela_inicial")
 def tela_inicial_alias():
     return render_template("tela_inicial.html")
-
 
 @app.route("/login")
 def login_page():
@@ -184,7 +175,6 @@ def tela_pagamento():
         return redirect("/login")
     return render_template("pagamento.html")
 
-
 @app.route("/admin")
 def admin_page():
     if "user_id" not in session or session.get("admin") is not True:
@@ -194,7 +184,6 @@ def admin_page():
 @app.route("/tela_usuario")
 def tela_usuario_page():
     return render_template("usuario.html")
-
 
 @app.route("/produto/<int:id>")
 def pagina_produto(id):
@@ -221,7 +210,6 @@ def login():
 
         return jsonify({"ok": True, "admin": user.admin})
 
-
 @app.route("/api/cadastro", methods=["POST"])
 def cadastro():
     dados = request.json or {}
@@ -243,7 +231,6 @@ def cadastro():
         session["admin"] = novo.admin
 
         return jsonify({"message": "Conta criada com sucesso"})
-
 
 @app.route("/logout")
 def logout():
@@ -269,7 +256,6 @@ def usuario_logado():
             "foto": f"/static/uploads/{u.foto}" if u.foto else None
         })
 
-
 @app.route("/usuario", methods=["PUT"])
 def atualizar_usuario():
     if "user_id" not in session:
@@ -286,7 +272,6 @@ def atualizar_usuario():
             user.senha = generate_password_hash(dados["senha"])
 
     return jsonify({"message": "Dados atualizados"})
-
 
 @app.route("/upload_foto", methods=["POST"])
 def upload_foto():
@@ -317,7 +302,6 @@ def upload_foto():
 def admin_required():
     return "user_id" in session and session.get("admin") is True
 
-
 @app.route("/admin/usuarios", methods=["GET"])
 def listar_usuarios_admin():
     if not admin_required():
@@ -337,7 +321,6 @@ def listar_usuarios_admin():
             for u in users
         ])
 
-
 @app.route("/admin/usuarios/<int:id>", methods=["GET"])
 def pegar_usuario_admin(id):
     if not admin_required():
@@ -355,7 +338,6 @@ def pegar_usuario_admin(id):
             "admin": u.admin,
             "bloqueado": u.bloqueado
         })
-
 
 @app.route("/admin/usuarios/<int:id>", methods=["PUT"])
 def editar_usuario_admin(id):
@@ -379,7 +361,6 @@ def editar_usuario_admin(id):
 
     return jsonify({"message": "Usuário atualizado"})
 
-
 @app.route("/admin/usuarios/<int:id>/bloquear", methods=["PUT"])
 def bloquear_usuario(id):
     if not admin_required():
@@ -396,7 +377,6 @@ def bloquear_usuario(id):
         "message": "Status alterado",
         "bloqueado": u.bloqueado
     })
-
 
 @app.route("/admin/usuarios/<int:id>", methods=["DELETE"])
 def remover_usuario(id):
@@ -433,7 +413,6 @@ def dashboard_resumo():
         "faturado": faturamento
     })
 
-
 @app.route("/admin/dashboard/grafico_vendas", methods=["GET"])
 def dashboard_grafico_vendas():
     if not admin_required():
@@ -446,7 +425,6 @@ def dashboard_grafico_vendas():
         valores = [float(p.total) for p in pedidos]
 
     return jsonify({"labels": labels, "values": valores})
-
 
 @app.route("/admin/dashboard/produtos_mais_vendidos", methods=["GET"])
 def produtos_mais_vendidos():
@@ -464,9 +442,8 @@ def produtos_mais_vendidos():
     return jsonify(ranking)
 
 # -----------------------------------------------------
-# PREVISÃO DE DEMANDA (REGRESSÃO LINEAR SIMPLES)
+# PREVISÃO DE DEMANDA (CORRIGIDO)
 # -----------------------------------------------------
-
 @app.route("/admin/previsao/<int:produto_id>", methods=["GET"])
 def previsao_demanda(produto_id):
     if not admin_required():
@@ -486,8 +463,7 @@ def previsao_demanda(produto_id):
         vendas = {}
 
         for item, pedido in itens:
-            # Como você não tem campo de data no banco
-            mes = datetime.now().strftime("%Y-%m")
+            mes = datetime.strptime(pedido.data, "%Y-%m-%d").strftime("%Y-%m")
             vendas[mes] = vendas.get(mes, 0) + item.quantidade
 
         meses = sorted(vendas.keys())
@@ -511,12 +487,9 @@ def previsao_demanda(produto_id):
             "previsao": previsao
         })
 
-
-
 # -----------------------------------------------------
-# 🆕 ROTAS DE VENDAS (ADICIONADAS)
+# VENDAS
 # -----------------------------------------------------
-
 @app.route("/admin/vendas/pedidos", methods=["GET"])
 def admin_vendas_pedidos():
     if not admin_required():
@@ -533,7 +506,6 @@ def admin_vendas_pedidos():
             }
             for p in pedidos
         ])
-
 
 @app.route("/admin/vendas/top_produtos", methods=["GET"])
 def admin_top_produtos():
@@ -575,7 +547,6 @@ def listar_produtos():
             for p in produtos
         ])
 
-
 @app.route("/produtos", methods=["POST"])
 def criar_produto():
     if not admin_required():
@@ -609,7 +580,6 @@ def criar_produto():
 
     return jsonify({"ok": True, "message": "Produto cadastrado com sucesso"})
 
-
 @app.route("/produtos/<int:id>", methods=["GET"])
 def produto(id):
     with get_session() as s:
@@ -622,7 +592,6 @@ def produto(id):
             "estoque": p.estoque,
             "imagem": f"/static/uploads/{p.imagem}" if p.imagem else None
         })
-
 
 @app.route("/produtos/<int:id>", methods=["PUT"])
 def editar_produto(id):
@@ -647,7 +616,6 @@ def editar_produto(id):
             p.imagem = nome_imagem
 
     return jsonify({"message": "Produto atualizado"})
-
 
 @app.route("/produtos/<int:id>", methods=["DELETE"])
 def excluir_produto(id):
@@ -685,7 +653,6 @@ def listar_carrinho():
             for i in itens
         ])
 
-
 @app.route("/carrinho", methods=["POST"])
 def adicionar_ao_carrinho():
     if "user_id" not in session:
@@ -720,7 +687,7 @@ def alterar_quantidade():
 
     dados = request.json or {}
     produto_id = dados.get("produto_id")
-    delta = dados.get("quantidade", 0)  # +1 ou -1
+    delta = dados.get("quantidade", 0)
 
     with get_session() as s:
         item = s.query(CarrinhoItem).filter_by(
@@ -757,11 +724,8 @@ def remover_do_carrinho(produto_id):
 
     return jsonify({"message": "Item removido"})
 
-
-
-
 # -----------------------------------------------------
-# CHECKOUT
+# CHECKOUT (CORRIGIDO)
 # -----------------------------------------------------
 @app.route("/checkout", methods=["POST"])
 def checkout():
@@ -776,7 +740,11 @@ def checkout():
 
         total = sum(i.produto.preco * i.quantidade for i in itens)
 
-        novo_pedido = Pedido(usuario_id=session["user_id"], total=total)
+        novo_pedido = Pedido(
+            usuario_id=session["user_id"],
+            total=total,
+            data=datetime.now().strftime("%Y-%m-%d")   # 🟢 SALVA DATA REAL
+        )
         s.add(novo_pedido)
         s.flush()
 
@@ -813,7 +781,6 @@ def pedidos():
 def apply_cors(response):
     response.headers["Access-Control-Allow-Credentials"] = "true"
     return response
-
 
 # -----------------------------------------------------
 # RUN
