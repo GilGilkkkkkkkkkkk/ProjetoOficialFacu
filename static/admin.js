@@ -1,7 +1,5 @@
 const API_URL = "https://projetooficialfacu-production.up.railway.app";
 
-
-
 /* ======================================================
    1. SIDEBAR + MENU DO PERFIL
 ====================================================== */
@@ -37,20 +35,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const mpCarrinho = document.querySelector("#sideMenu li:nth-child(3)");
     const mpSair = document.querySelector("#sideMenu li:nth-child(4)");
 
-    // Minha Conta
     mpConta.addEventListener("click", () => {
         window.location.href = "/tela_usuario";
     });
 
-    // Configurações (não faz nada)
     mpConfig.addEventListener("click", () => {});
 
-    // Carrinho
     mpCarrinho.addEventListener("click", () => {
         window.location.href = "/carrinho";
     });
 
-    // Sair
     mpSair.addEventListener("click", async () => {
         await fetch("/logout");
         window.location.href = "/login";
@@ -65,7 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
 function inicializarMenuLateral() {
     document.querySelectorAll(".menu-item").forEach(item => {
         item.addEventListener("click", () => {
-
             document.querySelectorAll(".menu-item").forEach(i =>
                 i.classList.remove("active")
             );
@@ -455,7 +448,7 @@ async function abrirDashboard() {
 }
 
 /* ======================================================
-   11. OUTRAS TELAS
+   11. TELA DE VENDAS
 ====================================================== */
 async function abrirTelaVendas() {
     const main = document.querySelector("main");
@@ -489,7 +482,6 @@ async function abrirTelaVendas() {
         </table>
     `;
 
-    // --------- CARREGAR PEDIDOS ---------
     const pedidosResp = await fetch(`${API_URL}/admin/vendas/pedidos`, { credentials: "include" });
     const pedidos = await pedidosResp.json();
 
@@ -506,7 +498,6 @@ async function abrirTelaVendas() {
         `;
     });
 
-    // --------- CARREGAR TOP PRODUTOS ---------
     const topResp = await fetch(`${API_URL}/admin/vendas/top_produtos`, { credentials: "include" });
     const produtos = await topResp.json();
 
@@ -523,7 +514,9 @@ async function abrirTelaVendas() {
     });
 }
 
-
+/* ======================================================
+   12. PREVISÃO DE DEMANDA — VERSÃO COMPLETA
+====================================================== */
 async function abrirTelaPrevisao() {
 
     const main = document.querySelector("main");
@@ -546,14 +539,18 @@ async function abrirTelaPrevisao() {
                 <p>📅 Em 2 meses: <strong id="p2"></strong></p>
                 <p>📅 Em 3 meses: <strong id="p3"></strong></p>
             </div>
+
+            <div class="extra-info">
+                <p>📉 Tendência: <strong id="tendencia"></strong></p>
+                <p>⚠️ Estimativa ideal de reposição: <strong id="repor"></strong></p>
+                <p>🚨 Aviso de estoque: <strong id="alertaEstoque"></strong></p>
+            </div>
         </div>
     `;
 
     const select = document.getElementById("produtoSelect");
 
-    // ================================
-    // 1. Carregar lista de produtos
-    // ================================
+    // 1) Carregar produtos
     const r = await fetch(`${API_URL}/produtos`);
     const produtos = await r.json();
 
@@ -561,16 +558,18 @@ async function abrirTelaPrevisao() {
 
     produtos.forEach(p => {
         select.innerHTML += `
-            <option value="${p.id}">${p.nome}</option>
+            <option value="${p.id}" data-estoque="${p.estoque}">
+                ${p.nome}
+            </option>
         `;
     });
 
-    // ================================
-    // 2. Quando selecionar um produto
-    // ================================
+    // 2) Quando selecionar produto
     select.addEventListener("change", async () => {
         const id = select.value;
         if (!id) return;
+
+        const estoqueAtual = Number(select.selectedOptions[0].dataset.estoque);
 
         const api = await fetch(`${API_URL}/admin/previsao/${id}`, { credentials: "include" });
         const dados = await api.json();
@@ -581,23 +580,59 @@ async function abrirTelaPrevisao() {
         }
 
         document.getElementById("previsaoInfo").style.display = "block";
-        document.getElementById("tituloProduto").innerText = `📦 Produto: ${dados.produto_id}`;
+        document.getElementById("tituloProduto").innerText = `📦 Produto ${dados.produto_id}`;
 
-        // Números previstos
+        // NUMEROS
         document.getElementById("p1").innerText = dados.previsao["+1_mes"];
         document.getElementById("p2").innerText = dados.previsao["+2_mes"];
         document.getElementById("p3").innerText = dados.previsao["+3_mes"];
 
-        // Histórico
+        // TENDÊNCIA
+        const tendencia = dados.tendencia;
+        let textoTendencia = tendencia > 0 ? 
+            `⬆️ Crescimento (${tendencia})` :
+            tendencia < 0 ?
+            `⬇️ Queda (${tendencia})` :
+            "➡️ Estável (0)";
+
+        document.getElementById("tendencia").innerText = textoTendencia;
+
+        // CALCULAR REPOSIÇÃO IDEAL
+        const mediaPrev = (
+            dados.previsao["+1_mes"] + 
+            dados.previsao["+2_mes"] + 
+            dados.previsao["+3_mes"]
+        ) / 3;
+
+        let repor = 0;
+        if (estoqueAtual < mediaPrev) {
+            repor = Math.ceil(mediaPrev - estoqueAtual);
+            document.getElementById("repor").innerText = `${repor} unidades (recomendado)`;
+        } else {
+            document.getElementById("repor").innerText = "Nenhuma (estoque suficiente)";
+        }
+
+        // ALERTAS
+        let alertaMsg = "";
+        if (estoqueAtual <= 3) {
+            alertaMsg = "🚨 Estoque MUITO BAIXO! Reposição urgente!";
+        } else if (estoqueAtual <= 8) {
+            alertaMsg = "⚠️ Estoque baixo — fique atento.";
+        } else {
+            alertaMsg = "✔️ Estoque normal.";
+        }
+
+        document.getElementById("alertaEstoque").innerText = alertaMsg;
+
+        // GRÁFICO
+
         const meses = Object.keys(dados.historico);
         const valores = Object.values(dados.historico);
 
-        // Destruir gráfico antigo se existir
         if (window.graficoPrevisaoInstance) {
             window.graficoPrevisaoInstance.destroy();
         }
 
-        // Criar novo gráfico
         const ctx = document.getElementById("graficoPrevisao").getContext("2d");
 
         window.graficoPrevisaoInstance = new Chart(ctx, {
@@ -605,7 +640,7 @@ async function abrirTelaPrevisao() {
             data: {
                 labels: meses,
                 datasets: [{
-                    label: "Vendas por mês",
+                    label: "Histórico de vendas",
                     data: valores,
                     borderColor: "#6a0dad",
                     backgroundColor: "rgba(106, 13, 173, 0.3)",
